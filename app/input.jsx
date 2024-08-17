@@ -7,12 +7,14 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
+import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "@/components/header";
 
 export default function Input() {
   const [image, setImage] = useState(null);
+  const router = useRouter();
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -66,6 +68,12 @@ export default function Input() {
               color="#E2000F"
             />
           </View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => router.push("/info")}
+          >
+            <Text style={styles.buttonText}>Go to Info</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
