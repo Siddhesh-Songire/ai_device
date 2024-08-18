@@ -20,7 +20,7 @@ export default function Input() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 5],
       quality: 1,
     });
 
@@ -32,12 +32,13 @@ export default function Input() {
   const captureImage = async () => {
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 5],
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
     });
 
     if (!result.canceled) {
-      setImage(result.uri);
+      setImage(result.assets[0].uri);
     }
   };
 
@@ -88,20 +89,21 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 20,
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
     marginBottom: 20,
+    textAlign: "center",
   },
   imageInput: {
-    width: 200,
-    height: 200,
+    width: "100%",
+    height: 300,
     borderColor: "#ddd",
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
@@ -109,17 +111,31 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: "100%",
-    borderRadius: 10,
+    borderRadius: 15,
   },
   imagePlaceholder: {
     color: "#aaa",
+    fontSize: 16,
   },
   buttonContainer: {
     width: "100%",
     alignItems: "center",
+    marginBottom: 20,
   },
   buttonWrapper: {
     width: "80%",
     marginVertical: 10,
+  },
+  button: {
+    marginTop: 20,
+    backgroundColor: "#E2000F",
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
