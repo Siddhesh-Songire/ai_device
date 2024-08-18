@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Image, Text } from "react-native";
 import { Colors } from "@/constants/Colors";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Header = () => {
   return (

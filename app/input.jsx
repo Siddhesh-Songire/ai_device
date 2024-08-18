@@ -84,13 +84,14 @@ export default function Input() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#E2000F",
   },
   content: {
     flex: 1,
     padding: 20,
     justifyContent: "space-between",
     alignItems: "center",
+    backgroundColor: "#fff",
   },
   title: {
     fontSize: 26,
