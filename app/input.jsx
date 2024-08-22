@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Button,
+  Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
@@ -42,6 +43,13 @@ export default function Input() {
     }
   };
 
+  const proceedFunc = () => {
+    if (!image) {
+      Alert.alert("No Image", "Please upload or capture an image first.");
+      return;
+    } else Alert.alert("Proceeding...");
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Header />
@@ -63,11 +71,7 @@ export default function Input() {
             />
           </View>
           <View style={styles.buttonWrapper}>
-            <Button
-              title="Proceed"
-              onPress={() => alert("Proceeding...")}
-              color="#E2000F"
-            />
+            <Button title="Proceed" onPress={proceedFunc} color="#E2000F" />
           </View>
           <TouchableOpacity
             style={styles.button}

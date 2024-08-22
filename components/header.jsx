@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Image, Text } from "react-native";
-import { Colors } from "@/constants/Colors";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Colors } from "../constants/Colors"; // Adjust the import path as needed
 
 const Header = () => {
   return (
@@ -10,7 +9,10 @@ const Header = () => {
         source={require("../assets/images/lg.png")} // Replace with your logo URL or local path
         style={styles.logo}
       />
-      <Text style={styles.navText}>Your Text Here</Text>
+      <View style={styles.textContainer}>
+        <Text style={styles.verticalText1}>ENGINEERING</Text>
+        <Text style={styles.verticalText}>TOMORROW</Text>
+      </View>
     </View>
   );
 };
@@ -29,10 +31,23 @@ const styles = StyleSheet.create({
     width: 130,
     height: 50,
   },
-  navText: {
+  textContainer: {
+    alignItems: "flex-end",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  verticalText: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: "700",
     color: "#fff",
+    letterSpacing: 1.5,
+  },
+  verticalText1: {
+    fontSize: 18,
+    fontWeight: "400",
+    color: "#fff",
+    letterSpacing: 1.5,
   },
 });
 
