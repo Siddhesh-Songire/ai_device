@@ -5,15 +5,19 @@ import {
   View,
   ScrollView,
   Image,
-  Button,
-  SafeAreaView,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
-import { useRouter } from "expo-router";
 import Header from "@/components/header";
+import { useRouter, useLocalSearchParams } from "expo-router";
 
 const Info = () => {
   const router = useRouter();
+  const { data, imageUri } = useLocalSearchParams();
+  const parsedData = JSON.parse(data);
+
+  const deviceType =
+    parsedData.eid === "EID NO: 4e:77:14:22:06:23" ? "CS500" : "CS100";
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -21,45 +25,59 @@ const Info = () => {
       <ScrollView contentContainerStyle={styles.container}>
         <Image
           style={styles.deviceImage}
-          source={{ uri: "https://via.placeholder.com/150" }} // Replace with your device image URL
+          source={{ uri: imageUri || "https://via.placeholder.com/150" }}
         />
+
+        {/* Serial Number and Product Information */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Device Name</Text>
-          <Text style={styles.sectionContent}>My Device</Text>
+          <Text style={styles.sectionTitle}>{parsedData.serialNo}</Text>
           <Text style={styles.sectionContent}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
-            lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod
-            malesuada.
+            {parsedData[deviceType].product}
+          </Text>
+          <Text style={styles.sectionContent}>
+            {parsedData[deviceType].description}
           </Text>
         </View>
+
+        {/* Manufacturer Information */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Model Specification</Text>
-          <Text style={styles.sectionContent}>Model XYZ</Text>
+          <Text style={styles.sectionTitle}>Manufacturer</Text>
           <Text style={styles.sectionContent}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
-            lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod
-            malesuada.
+            {parsedData[deviceType].manufacturer}
           </Text>
         </View>
+
+        {/* Features */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Release Details</Text>
-          <Text style={styles.sectionContent}>Released in 2023</Text>
-          <Text style={styles.sectionContent}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
-            lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod
-            malesuada.
-          </Text>
+          <Text style={styles.sectionTitle}>Features</Text>
+          {Object.entries(parsedData[deviceType].features).map(
+            ([key, value], index) => (
+              <View key={index}>
+                <Text style={styles.featureTitle}>{key}</Text>
+                <Text style={styles.sectionContent}>{value}</Text>
+              </View>
+            )
+          )}
         </View>
+
+        {/* Ideal For */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Additional Information</Text>
-          <Text style={styles.sectionContent}>
-            This device is equipped with the latest technology.
-          </Text>
-          <Text style={styles.sectionContent}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
-            lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod
-            malesuada.
-          </Text>
+          <Text style={styles.sectionTitle}>Ideal For</Text>
+          {parsedData[deviceType].ideal_for.map((item, index) => (
+            <Text key={index} style={styles.sectionContent}>
+              • {item}
+            </Text>
+          ))}
+        </View>
+
+        {/* Benefits */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Benefits</Text>
+          {parsedData[deviceType].benefits.map((item, index) => (
+            <Text key={index} style={styles.sectionContent}>
+              • {item}
+            </Text>
+          ))}
         </View>
 
         <TouchableOpacity
@@ -104,6 +122,11 @@ const styles = StyleSheet.create({
   },
   sectionContent: {
     fontSize: 16,
+  },
+  featureTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginTop: 4,
   },
   button: {
     backgroundColor: "#E2000F",

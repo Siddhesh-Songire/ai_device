@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Button,
   Alert,
+  ActivityIndicator, // Import ActivityIndicator
 } from "react-native";
 import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
@@ -15,7 +16,10 @@ import Header from "@/components/header";
 
 export default function Input() {
   const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const API_URL =
+    "https://ai-base-device-backend.azurewebsites.net/image/process";
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -24,7 +28,6 @@ export default function Input() {
       aspect: [4, 5],
       quality: 1,
     });
-
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
@@ -43,11 +46,42 @@ export default function Input() {
     }
   };
 
-  const proceedFunc = () => {
+  const proceedImage = async () => {
     if (!image) {
       Alert.alert("No Image", "Please upload or capture an image first.");
       return;
-    } else Alert.alert("Proceeding...");
+    }
+
+    setLoading(true);
+
+    const formData = new FormData();
+    formData.append("image", {
+      uri: image,
+      name: "imageName.jpg",
+      type: "image/jpeg",
+    });
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+      setLoading(false);
+
+      router.push({
+        pathname: "/info",
+        params: { data: JSON.stringify(data), imageUri: image },
+      });
+    } catch (error) {
+      setLoading(false);
+      Alert.alert("Error", "Failed to upload image. Please try again.");
+    }
   };
 
   return (
@@ -71,15 +105,15 @@ export default function Input() {
             />
           </View>
           <View style={styles.buttonWrapper}>
-            <Button title="Proceed" onPress={proceedFunc} color="#E2000F" />
+            <Button title="Proceed" onPress={proceedImage} color="#E2000F" />
           </View>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => router.push("/info")}
-          >
-            <Text style={styles.buttonText}>Go to Info</Text>
-          </TouchableOpacity>
         </View>
+        {loading && (
+          <View style={styles.overlay}>
+            <ActivityIndicator size="large" color="#E2000F" />
+            <Text style={styles.loadingText}>Uploading...</Text>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -131,16 +165,16 @@ const styles = StyleSheet.create({
     width: "80%",
     marginVertical: 10,
   },
-  button: {
-    marginTop: 20,
-    backgroundColor: "#E2000F",
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 10,
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 10,
   },
-  buttonText: {
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
     color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
   },
 });
